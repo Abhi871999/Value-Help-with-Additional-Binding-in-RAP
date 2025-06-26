@@ -1,0 +1,52 @@
+@Metadata.layer: #CORE
+annotate entity zvs_c_mat_stock with
+{
+ @UI.facet: [{
+     id: 'MaterialStock',
+     purpose: #STANDARD,
+     type: #IDENTIFICATION_REFERENCE,
+     label: 'Material ID',
+     position: 10
+   }]
+
+ @UI: { lineItem: [{ position: 10, label: 'Material no.' }],
+         identification: [{ position: 10, label: 'Material no.' }] }
+  Matnr;
+
+ @UI: { lineItem: [{ position: 20, label: 'Plant' }],
+     identification: [{ position: 20, label: 'Plant' }] }
+  @Consumption.valueHelpDefinition: [{ entity : { element: 'Werks' , name: 'zvs_i_plant_dt' } }]
+  Werks;
+
+ @UI: { lineItem: [{ position: 30, label: 'Storage location' }],
+       identification: [{ position: 30, label: 'Storage location' }] }
+  @Consumption.valueHelpDefinition: [{ entity : { element: 'StorageLocation' , name: 'zvs_i_storage_lc'  }
+  ,additionalBinding: [{ element: 'Plant' ,localElement: 'Werks' }]
+  }]
+  Lgort;
+
+ @UI: { lineItem: [{ position: 40, label: 'Stock quantity' }],
+       identification: [{ position: 40, label: 'Stock quantity' }] }
+  Labst;
+
+ @UI: { lineItem: [{ position: 60, label: 'Storage location Description' }],
+       identification: [{ position: 60, label: 'Storage location Description' }] }
+  StorageLocDesc;
+}
+
+
+--------------------------------------------------------------------------------------
+Here: 
+
+This “@Consumption.valueHelpDefinition: [{ entity : { element: 'Werks' , name: 'zvs_i_plant_dt' } }]” Annotation to get the dropdown for WERKS(Plant) Field. 
+This “@Consumption.valueHelpDefinition: [{ entity : { element: 'StorageLocation' , name: 'zvs_i_storage_lc' }, additionalBinding: [{ element: 'Plant' ,localElement: 'Werks' }] }]” Annotation here, for additional binding. So based on selected plant it will dynamically filter the storage location.  
+The @Consumption.valueHelpDefinition annotation is used to define value help (similar to F4 help in SAP GUI) for a field. It allows you to provide dropdown-style suggestions or search help for users when they enter data into specific fields. 
+
+entity: 
+Specifies the data source for the value help. 
+element: 'StorageLocation': The field in the current CDS view where the value help is applied. 
+name: 'zvs_i_storage_lc': The CDS view providing the value help data. 
+additionalBinding: 
+Defines additional filtering criteria. 
+element: 'Plant': The field in the value help entity used for filtering. 
+localElement: 'Werks': The field in the current view that is used as the filtering key. 
