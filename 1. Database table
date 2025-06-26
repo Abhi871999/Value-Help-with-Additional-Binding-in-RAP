@@ -1,0 +1,48 @@
+zvs_dt_storage_l → Storage Locations table with data
+
+@EndUserText.label : 'Table for storage location'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zvs_dt_storage_l {
+  key client : abap.clnt not null;
+  key lgort  : lgort_d not null;
+  key lgobe  : abap.char(16) not null;
+  werks      : werks_d;
+}
+
+-----------------------------------------------------------------------------
+
+zvs_dt_plant_dt → Plant Data
+
+@EndUserText.label : 'Table for plant data'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zvs_dt_plant_dt {
+  key client : abap.clnt not null;
+  key werks  : werks_d not null;
+  name1      : abap.char(30);
+}
+
+-------------------------------------------------------------------------------
+
+zvs_dt_mat_stock → Material Stock Data 
+
+@EndUserText.label : 'table to store the material stock data.'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zvs_dt_mat_stock {
+  key client : abap.clnt not null;
+  key matnr  : matnr not null;
+  werks      : werks_d;
+  lgort      : lgort_d;
+  @Semantics.quantity.unitOfMeasure : 'zvs_dt_mat_stock.meins'
+  labst      : abap.quan(13,3);
+  meins      : meins;
+}
+
