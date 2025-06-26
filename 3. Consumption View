@@ -1,0 +1,29 @@
+3. Now create one consumption view ‘ZVS_C_MAT_STOCK’ on top of Interface view 'ZVS_I_MAT_STOCK': - 
+
+The consumption view zvs_c_mat_stock projects the data from the interface view zvs_i_mat_stock.
+This view is intended to expose the data for transactional operations, such as create, update, and delete. 
+The consumption view allows clients to interact with the data, but the actual persistence and behavior are managed through the behavior definition. 
+
+@AbapCatalog.viewEnhancementCategory: [#NONE]
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'consumption view for material stock'
+@Metadata.ignorePropagatedAnnotations: true
+@Metadata.allowExtensions: true
+@ObjectModel.usageType:{
+    serviceQuality: #X,
+    sizeCategory: #S,
+    dataClass: #MIXED
+}
+define root view entity zvs_c_mat_stock provider contract transactional_query 
+as projection on zvs_i_mat_stock
+{
+    key Matnr,
+    Werks,
+    Lgort,
+    @Semantics.quantity.unitOfMeasure: 'meins'
+    Labst,
+    Meins,
+    /* Associations */
+    _plant,
+    StorageLocDesc
+}
