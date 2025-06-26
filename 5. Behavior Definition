@@ -1,0 +1,40 @@
+The labst (Stock Quantity) and meins (Unit of Measure) fields are read-only. 
+The behavior definition supports CRUD operations. 
+Now create a behavior definition on top of interface view 'ZVS_I_MAT_STOCK': 
+
+managed implementation in class zbp_vs_i_mat_stock unique;
+strict ( 2 );
+
+define behavior for zvs_i_mat_stock //alias <alias_name>
+persistent table zvs_dt_mat_stock
+lock master
+authorization master ( instance )
+//etag master <field_name>
+early numbering
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) Matnr, StorageLocDesc;
+
+  mapping for zvs_dt_mat_stock{
+    Matnr = matnr;
+    Werks = werks;
+    Lgort = lgort;
+    Labst = labst;
+    Meins = meins;
+  }
+}
+
+-------------------------------------------------------------------------------------------------------
+Now create a behavior definition on top of consumption view 'ZVS_C_MAT_STOCK': 
+
+projection;
+strict ( 2 );
+
+define behavior for zvs_c_mat_stock //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+}
