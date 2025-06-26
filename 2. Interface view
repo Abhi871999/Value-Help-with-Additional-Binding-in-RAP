@@ -1,0 +1,65 @@
+create one interface view ‘ZVS_I_PLANT_DT’ on top of DB table 'ZVS_DT_PLANT_DT': - 
+
+This view provides the value help for Plant (WERKS). 
+
+I have used the annotation "@ObjectModel.resultSet.sizeCategory: #XS” which makes the value help appear as a dropdown. 
+
+@AbapCatalog.sqlViewName: 'ZVS_PLANT_DT'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'interface view for plant data'
+@Metadata.ignorePropagatedAnnotations: true
+@ObjectModel.resultSet.sizeCategory: #XS
+define view zvs_i_plant_dt as select from zvs_dt_plant_dt
+{
+    key werks as Werks,
+    name1 as Name1
+}
+
+------------------------------------------------------------------------------------
+
+2.2 Now create interface view ‘ZVS_I_STORAGE_LC’ on top of DB table 'ZVS_DT_STORAGE_L': - 
+
+This view filters Storage Locations by Plant using additional binding. 
+
+This view selects Storage Location, Description, and Plant. 
+The Plant field acts as the filter when the user selects a Plant. 
+@AbapCatalog.sqlViewName: 'ZVS_STORAGE_LC'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'interface view for storage location'
+@Metadata.ignorePropagatedAnnotations: true
+define view zvs_i_storage_lc as select from zvs_dt_storage_l
+{
+    key lgort as StorageLocation,
+    lgobe as StorageLocDesc,
+    werks as Plant
+}
+
+-----------------------------------------------------------------------------------
+
+2.3 Now create interface view ‘ZVS_I_MAT_STOCK’ on top of DB table 'ZVS_DT_MAT_STOCK': - 
+
+An Interface View (zvs_i_mat_stock) for fetching material stock data with associations to plant and storage location details. 
+
+This view maps to the custom table zvs_dt_mat_stock. 
+It includes fields for Material Number, Plant, Storage Location, Stock Quantity, and Unit of Measure 
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'interface view for material stock'
+@Metadata.ignorePropagatedAnnotations: true
+
+define root view entity zvs_i_mat_stock as select from zvs_dt_mat_stock
+association[0..*] to zvs_i_plant_dt  as _plant on $projection.Werks = _plant.Werks
+association[0..*] to zvs_i_storage_lc as _storage on $projection.Lgort = _storage.StorageLocation
+{
+    key matnr as Matnr,
+    werks as Werks,
+    lgort as Lgort,
+    @Semantics.quantity.unitOfMeasure: 'meins'
+    labst as Labst,
+    meins as Meins,
+    _plant,
+    _storage.StorageLocDesc // Expose description from Storage association
+}
